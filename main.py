@@ -9,7 +9,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sqlite3.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False 
 db = SQLAlchemy(app)
 
-class Author(db.Model):
+class Authors(db.Model):
 	id = db.Column(db.Integer, primary_key = True)
 	name = db.Column(db.String(20))
 	specialisation = db.Column(db.String(50))

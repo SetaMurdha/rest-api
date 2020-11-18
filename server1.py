@@ -7,6 +7,9 @@ api = Api(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tmp/fooddatabase.db'
 db = SQLAlchemy(app)
 
+# def no_food(food_id):
+# 	if not in food_id:
+# 		abort(404, message = "Makanan tidak ditemukan")
 
 class foodModelDB(db.Model):
 	id = db.Column(db.Integer, primary_key = True)
@@ -21,6 +24,11 @@ food_put_args = reqparse.RequestParser()
 food_put_args.add_argument("name", type = str, help="Makanan Belum Masuk", required = True)
 food_put_args.add_argument("jenis", type = str, help="Jenis Belum Masuk", required = True)
 food_put_args.add_argument("harga", type = int, help="Harga Belum Masuk", required = True)
+
+food_update_args = reqparse.RequestParser()
+food_update_args.add_argument("name", type = str, help="Makanan Belum Masuk")
+food_update_args.add_argument("jenis", type = str, help="Jenis Belum Masuk")
+food_update_args.add_argument("harga", type = int, help="Harga Belum Masuk")
 
 resource_field ={
 	'id': fields.Integer,
@@ -48,9 +56,30 @@ class food(Resource):
 		db.session.commit()
 		return makanan,201
 
+	@marshal_with(resource_field)
+	def patch(self, food_id):
+		args = food_update_args.parse_args()
+		hasil = foodModelDB.query.filter_by(id=food_id).first()
+		if not hasil:
+			abort(404, message = "Video tidak ada")
+
+		if args['name']:
+			hasil.name = args['name'] 
+		if args['jenis']:
+			hasil.jenis = args['jenis']
+		if args['harga']:
+			hasil.harga = args['harga']
+
+		db.session.commit()
+
+		return hasil
+
+	@marshal_with(resource_field)
 	def delete(self, food_id):
-		no_food_id(food_id)
-		del foods[food_id]
+		hasil = foodModelDB.query.filter_by(id=food_id).first()
+		if not hasil:
+			abort(409, message = "Makanan tidak ada")
+		del hasil
 		return '', 204
 
 

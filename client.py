@@ -2,19 +2,16 @@ import requests
 
 server1 = "http://127.0.0.1:5000/"
 
-data = [{"name":"Kubis", "jenis":"Sayuran", "harga":3000},
-		{"name":"Singkong", "jenis":"Umbi", "harga":2000},
-		{"name":"Cumi-cumi", "jenis":"Seafood", "harga":7000}]
-
-for i in range(len(data)):
-	response=requests.put(server1+"food/"+ str(i), data[i])
+#tampilkan data server 1
+a = int(input("Data yang dikeluarkan"))
+for i in range(a):
+	response = requests.get(server1 + "food/"+str(i))
 	print(response.json())
 
-# response = requests.put(server1 + "food/1",{"name":"Enak", "jenis":"daging", "harga":10000})
-# print(response.json())
+#tambah data server 1
 
 input()
 
-response = requests.get(server1 + "food/2")
-print(response.json())
+response = requests.delete(server1 + "food/"+str(3))
 
+print(response.json())
